@@ -1,6 +1,10 @@
+use std::fmt::Display;
+
 pub trait Summary {
+    fn summarize_author(&self) -> String;
+
     fn summarize(&self) -> String {
-        String::from("(Read more...)")
+        format!("(Read more from {}...)", self.summarize_author())
     }
 }
 
@@ -12,7 +16,7 @@ pub struct NewArticle {
 }
 
 impl Summary for NewArticle {
-    fn summarize(&self) -> String {
+    fn summarize_author(&self) -> String {
         format!("{}, by {} ({})", self.headline, self.author, self.location)
     }
 }
@@ -25,7 +29,28 @@ pub struct Tweet {
 }
 
 impl Summary for Tweet {
-    fn summarize(&self) -> String {
-        format!("{}: {}", self.username, self.content)
+    fn summarize_author(&self) -> String {
+        format!("@{}", self.username)
+    }
+}
+
+struct Pair<T> {
+    x: T,
+    y: T,
+}
+
+impl<T> Pair<T> {
+    fn new(x: T, y: T) -> Self {
+        Self { x, y }
+    }
+}
+
+impl<T: Display + PartialOrd> Pair<T> {
+    fn cmp_display(&self) {
+        if self.x >= self.y {
+            println!("The largest member is x = {}", self.x);
+        } else {
+            println!("The largest member is y = {}", self.y);
+        }
     }
 }
